@@ -30,12 +30,9 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -791,5 +788,16 @@ public class PackedFile {
 		removedFileSet.remove(path);
 		dirty = true;
 		return new FileOutputStream(explodedFile);
+	}
+
+	/**
+	 * Returns a list of paths in the packed file that match the passed in regular expression.
+	 *
+	 * @param regex The regular expression to be matched.
+	 *
+	 * @return List of names of paths matching.
+	 */
+	public List<String> getMatchingPath(final String regex) {
+		return zFile.stream().filter(ze -> ze.getName().matches(regex)).map(ze -> ze.getName()).collect(Collectors.toList());
 	}
 }
